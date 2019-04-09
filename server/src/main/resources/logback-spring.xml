@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<!-- 日志级别：OFF、FATAL、ERROR、WARN、INFO、DEBUG、TRACE、ALL -->
+<!-- configuration属性描述 
+	scan:为true时，配置文件如果发生改变，将会被重新加载，默认值为true
+	scanPeriod:监测配置文件是否有修改的时间间隔；当scan为true时，此属性生效，默认单位是毫秒   
+    debug:设置为true时，将打印出logback内部日志信息，默认值为false -->
+
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!--
+        注册需要使用的 application 配置文件的属性
+
+        注意：
+        1. 名称必须使用 logback-spring.xml，xml才会在Spring启动后读取
+     -->
+    <springProperty scope="context" name="appName" source="spring.application.name"/>
+    <springProperty scope="context" name="logPath" source="logging.path"/>
+
+    <timestamp key="YEAR" datePattern="yyyy"/>
+    <timestamp key="MONTH" datePattern="MM"/>
+    <property name="CHARSET" value="UTF-8"/>
+
+    <!-- 日志保存时间7天 -->
+    <property name="maxHistory" value="7"/>
+    <property name="maxFileSize" value="200MB"/>
+
+
+    <property name="ROOTPATH" value="${logPath}"/>
+
+    <property name="BASEPATH" value="${ROOTPATH}/${appName}"/>
+
+    <!-- 日志目录 -->
+    <property name="BASEPATH_ERROR" value="${BASEPATH}/error"/>
+    <property name="BASEPATH_WARN" value="${BASEPATH}/warn"/>
+    <property name="BASEPATH_INFO" value="${BASEPATH}/info"/>
+    <property name="BASEPATH_DEBUG" value="${BASEPATH}/debug"/>
+
+    <!-- 彩色日志 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%15.15t] %-40.40logger{39} : %m%n"/>
+    <property name="CONSOLE_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <!-- ====================================================================================== -->
+    <!-- 控制台日志 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_PATTERN}</pattern>
+            <charset>${CHARSET}</charset> <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+
+    <!-- ERROR日志 -->
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${BASEPATH_ERROR}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <maxHistory>${maxHistory}</maxHistory>
+            <fileNamePattern>${BASEPATH_ERROR}/${YEAR}/${MONTH}/error-%d{yyyy-MM-dd}-%d{HH}-%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>${CHARSET}</charset> <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+
+    <!-- WARN日志 -->
+    <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${BASEPATH_WARN}/warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <maxHistory>${maxHistory}</maxHistory>
+            <fileNamePattern>${BASEPATH_WARN}/${YEAR}/${MONTH}/warn-%d{yyyy-MM-dd}-%d{HH}-%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>${CHARSET}</charset> <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+
+    <!-- INFO日志 -->
+    <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${BASEPATH_INFO}/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <maxHistory>${maxHistory}</maxHistory>
+            <fileNamePattern>${BASEPATH_INFO}/${YEAR}/${MONTH}/info-%d{yyyy-MM-dd}-%d{HH}-%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>${CHARSET}</charset> <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+
+    <!-- DEBUG日志 -->
+    <appender name="FILE_DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <!--<onMatch>ACCEPT</onMatch>-->
+            <!--<onMismatch>DENY</onMismatch>-->
+        </filter>
+        <file>${BASEPATH_DEBUG}/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <maxHistory>${maxHistory}</maxHistory>
+            <fileNamePattern>${BASEPATH_DEBUG}/${YEAR}/${MONTH}/debug-%d{yyyy-MM-dd}-%d{HH}-%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>${CHARSET}</charset> <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+
+    <!-- Fix Main Tools Logger Level -->
+    <logger name="druid.sql.Statement" level="DEBUG"/>
+    <logger name="druid.sql.ResultSet" level="WARN"/>
+
+    <!-- Fix Business Logger Level -->
+    <logger name="com.xiaoying" level="DEBUG"/>
+    <logger name="okhttp3.OkHttpClient" level="DEBUG"/>
+
+    <!-- Fix Root Level -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE_ERROR"/>
+        <appender-ref ref="FILE_WARN"/>
+        <appender-ref ref="FILE_INFO"/>
+        <appender-ref ref="FILE_DEBUG"/>
+    </root>
+</configuration>
