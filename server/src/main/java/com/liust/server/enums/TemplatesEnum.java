@@ -5,7 +5,7 @@ public enum TemplatesEnum {
     DOMAINSERVERIMPL("domainServiceImpl.ftl","ServiceImpl.java","/service/data/impl/"),
     DOMAINSERVER("domainService.ftl","Service.java","/service/data/"),
     MAPPERINTERFACE("mapperInterface.ftl","Mapper.java","/mapper/"),
-    MAPPERXML("mapperXml.ftl","Mapper.xml","resources/mybatis/mapper");
+    MAPPERXML("mapperXml.ftl","Mapper.xml","resources/mybatis/mapper/");
 
     private final String templateName;
     private final String fileSuffix;

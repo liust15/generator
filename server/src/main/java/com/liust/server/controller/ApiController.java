@@ -64,7 +64,7 @@ public class ApiController extends AbstractController {
      * 单表下载
      */
     @RequestMapping(value = "download/table",method = RequestMethod.POST)
-    public void singleTable(@RequestBody DBVOModel dbvoModel, HttpServletResponse response) {
+    public void singleTable(HttpServletResponse response,@RequestBody DBVOModel dbvoModel) {
         response.setContentType("application/octet-stream");
         String fileName = new String((dbvoModel.getDbConfigModel().getDbName() + ".zip").getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()))) {

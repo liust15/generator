@@ -98,6 +98,10 @@ public class DBUtil {
                 return "Double";
             case "image":
                 return "byte[]";
+            case "enum":
+                return "enum";
+            case "longtext":
+                return "String";
             default:
                 throw new RuntimeException("-----------------》转化失败：未发现的类型" + sqlType);
         }
