@@ -25,7 +25,7 @@ public class DBConfig {
 
     private JdbcTemplate jdbcTemplate;
 
-    public JdbcTemplate getJdbcTemplate(DBConfigModel dbConfigModel) {
+    private JdbcTemplate getJdbcTemplate(DBConfigModel dbConfigModel) {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
         driverManagerDataSource.setUrl(dbConfigModel.getUrl());

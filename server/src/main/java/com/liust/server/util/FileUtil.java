@@ -81,7 +81,6 @@ public class FileUtil {
      * @param zos      zip输出流
      * @param filePathAndName    文件路径和文件名
      *                 false:所有文件跑到压缩包根目录下(注意：不保留目录结构可能会出现同名文件,会压缩失败)
-     * @throws Exception
      */
     public static void compress(ZipOutputStream zos, String fileContent, String filePathAndName) throws IOException {
         byte[] buf = new byte[2 * 1024];
