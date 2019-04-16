@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: 'weekly_server'
+    name: 'generator_server'
   profiles:
     active: 'devp' #'home' #
   jackson:
@@ -11,16 +11,12 @@ spring:
     default-property-inclusion: non_null
     locale: zh_CN
     time-zone: 'GMT+8'
-  http:
-    converters:
-      preferred-json-mapper:
-    log-request-details: true
   freemarker:
-    #template-loader-path: classpath:/templates
     template-loader-path: classpath:/templates
 logging:
   level:
     com.liust: debug
+  path: /Users/liust/log
 
 
 

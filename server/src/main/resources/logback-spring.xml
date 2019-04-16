@@ -146,7 +146,7 @@
     <logger name="druid.sql.ResultSet" level="WARN"/>
 
     <!-- Fix Business Logger Level -->
-    <logger name="com.xiaoying" level="DEBUG"/>
+    <logger name="com.liust" level="DEBUG"/>
     <logger name="okhttp3.OkHttpClient" level="DEBUG"/>
 
     <!-- Fix Root Level -->
