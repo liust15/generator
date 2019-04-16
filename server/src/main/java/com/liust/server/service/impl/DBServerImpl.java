@@ -91,7 +91,8 @@ public class DBServerImpl implements DBServer {
     }
 
     private TableFileInfoModel getTableInfo(DomainModel domainModel) {
-        return TableFileInfoModel.builder().domain(getTemplate(TemplatesEnum.DOMAIN, domainModel))
+        return TableFileInfoModel.builder()
+                                 .domain(getTemplate(TemplatesEnum.DOMAIN, domainModel))
                                  .mapperInter(getTemplate(TemplatesEnum.MAPPERINTERFACE, domainModel))
                                  .service(getTemplate(TemplatesEnum.DOMAINSERVER, domainModel))
                                  .serviceImpl(getTemplate(TemplatesEnum.DOMAINSERVERIMPL, domainModel))
@@ -141,20 +142,4 @@ public class DBServerImpl implements DBServer {
         return list;
     }
 
-  /*  public static void main(String[] args) {
-       List<TableInfo> list=new ArrayList<>();
-        for (int i = 0; i <12 ; i++) {
-            TableInfo tableInfo=new TableInfo();
-            tableInfo.setType(String.valueOf(i));
-            tableInfo.setField(String.valueOf(i));
-            tableInfo.setComment(String.valueOf(i));
-            tableInfo.setKey(String.valueOf(i));
-            list.add(tableInfo);
-        }
-        list.forEach(tableInfo ->{
-            tableInfo.setType(tableInfo.getType()+"测试结果");
-            tableInfo.setField(DBUtil.UnderlineToHump(tableInfo.getField())+"测试发售");
-        });
-        System.out.println(list);
-    }*/
 }
