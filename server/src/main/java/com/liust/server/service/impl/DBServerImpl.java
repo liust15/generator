@@ -1,6 +1,7 @@
 package com.liust.server.service.impl;
 
 
+import com.liust.server.dao.DBDao;
 import com.liust.server.enums.DownloadEnum;
 import com.liust.server.enums.TemplatesEnum;
 import com.liust.server.model.DBConfigModel;
@@ -38,19 +39,19 @@ import static com.liust.server.util.FileUtil.compress;
 @Slf4j
 public class DBServerImpl implements DBServer {
     @Autowired
-    private com.liust.server.config.DBConfig dbConfig;
+    private DBDao dbDao;
     @Autowired
     private Configuration configuration;
 
 
     @Override
     public List<DBModel> getDBs(DBConfigModel dbConfigModel) {
-        return this.dbConfig.getDbModel(dbConfigModel);
+        return this.dbDao.getDbModel(dbConfigModel);
     }
 
     @Override
     public List<TableModel> getDBTables(DBConfigModel dbConfigModel) {
-        return this.dbConfig.getTableModel(dbConfigModel);
+        return this.dbDao.getTableModel(dbConfigModel);
     }
 
     @Override
@@ -59,14 +60,14 @@ public class DBServerImpl implements DBServer {
         if (dbvoModel.getAttributes() == DownloadEnum.SINGLETABLE.getAttributes()) {
             list.add(getTableFileInfo(dbvoModel.getDbConfigModel(), dbvoModel.getTableModel()));
         } else {
-            this.dbConfig.getTableModel(dbvoModel.getDbConfigModel())
+            this.dbDao.getTableModel(dbvoModel.getDbConfigModel())
                     .forEach(tableModel -> list.add(getTableFileInfo(dbvoModel.getDbConfigModel(), tableModel)));
         }
         return list;
     }
 
     private TableFileInfoModel getTableFileInfo(DBConfigModel dbConfigModel, TableModel tableModel) {
-        List<TableInfo> tableInfo = this.dbConfig.getTableInfo(dbConfigModel, tableModel);
+        List<TableInfo> tableInfo = this.dbDao.getTableInfo(dbConfigModel, tableModel);
         DomainModel domainModel = new DomainModel();
         domainModel.setPackageName(dbConfigModel.getGroup());
         domainModel.setTableInfos(analysis(tableInfo));
@@ -108,7 +109,8 @@ public class DBServerImpl implements DBServer {
             compress(zos, tableInfo.getService(), createFileName(TemplatesEnum.DOMAINSERVER, packages,  tableInfo.getTableName()));
             compress(zos, tableInfo.getServiceImpl(), createFileName(TemplatesEnum.DOMAINSERVERIMPL, packages,  tableInfo.getTableName()));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("压缩生成失败 {}", e.getMessage());
+            throw new RuntimeException("压缩生成失败 " + e.getMessage());
         }
     }
 
@@ -132,14 +134,27 @@ public class DBServerImpl implements DBServer {
 
 
     private List<TableInfo> analysis(List<TableInfo> list) {
-        TableInfo tableInfo;
-        for (int i = 0; i < list.size(); i++) {
-            tableInfo = list.get(i);
+        list.forEach(tableInfo ->{
             tableInfo.setType(DBUtil.toSqlToJava(tableInfo.getType()));
             tableInfo.setField(DBUtil.UnderlineToHump(tableInfo.getField()));
-            list.set(i, tableInfo);
-        }
+        });
         return list;
     }
 
+  /*  public static void main(String[] args) {
+       List<TableInfo> list=new ArrayList<>();
+        for (int i = 0; i <12 ; i++) {
+            TableInfo tableInfo=new TableInfo();
+            tableInfo.setType(String.valueOf(i));
+            tableInfo.setField(String.valueOf(i));
+            tableInfo.setComment(String.valueOf(i));
+            tableInfo.setKey(String.valueOf(i));
+            list.add(tableInfo);
+        }
+        list.forEach(tableInfo ->{
+            tableInfo.setType(tableInfo.getType()+"测试结果");
+            tableInfo.setField(DBUtil.UnderlineToHump(tableInfo.getField())+"测试发售");
+        });
+        System.out.println(list);
+    }*/
 }

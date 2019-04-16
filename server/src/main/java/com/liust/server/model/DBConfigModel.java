@@ -17,6 +17,7 @@ public class DBConfigModel {
     private String password;
     private String url;
     private String group;
+
     public static final String DBCONN = "jdbc:mysql://";
     private final static String DBCONFIG = "?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC&autoReconnect=true&failOverReadOnly=false";
 

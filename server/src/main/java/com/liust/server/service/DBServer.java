@@ -23,5 +23,5 @@ public interface DBServer {
 
     List<TableFileInfoModel> getTableInfo(DBVOModel dbvoModel);
 
-    void tablesToZip(DBVOModel dbvoModel, ZipOutputStream zos) throws Exception;
+    void tablesToZip(DBVOModel dbvoModel, ZipOutputStream zos);
 }

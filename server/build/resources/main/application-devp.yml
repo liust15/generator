@@ -1,6 +1,7 @@
 spring:
   datasource:
-#    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name:
+  #    driver-class-name: com.mysql.jdbc.Driver
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: UTC

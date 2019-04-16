@@ -112,7 +112,7 @@
                     if (attributes === 0&&that.sizeForm.tableModel.tableName.length===0) {
                         that.$notify.warning({title: '警告', message: '请选择需要生成的表'});
                         return;
-                    }else {
+                    }else if(attributes === 1&&that.sizeForm.tableModel.tableName.length===0){
                         that.sizeForm.tableModel.tableName=" ";
                         that.sizeForm.tableModel.tableComment=" ";
                     }
@@ -134,9 +134,11 @@
                             a.click()
                             document.body.removeChild(a)
                         }
-                    })
-                    that.sizeForm.tableModel.tableName='';
-                    that.sizeForm.tableModel.tableComment='';
+                    });
+                    if(attributes === 1&&that.sizeForm.tableModel.tableName===" "){
+                        that.sizeForm.tableModel.tableName='';
+                        that.sizeForm.tableModel.tableComment='';
+                    }
                 }
             }, // 下载文件
             download(data) {

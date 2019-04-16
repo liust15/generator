@@ -19,11 +19,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @program: springdemo
@@ -32,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * @create: 2019-04-04 18:17
  **/
 @Controller
+@Slf4j
 public class ApiController extends AbstractController {
 
     private final DBServer dbServer;
@@ -61,18 +65,20 @@ public class ApiController extends AbstractController {
     }
 
     /**
-     * 单表下载
+     * 项目下载打包为zip
      */
-    @RequestMapping(value = "download/table",method = RequestMethod.POST)
-    public void singleTable(HttpServletResponse response,@RequestBody DBVOModel dbvoModel) {
+    @RequestMapping(value = "download/table", method = RequestMethod.POST)
+    public MessageBean<String> singleTable(HttpServletResponse response, @RequestBody DBVOModel dbvoModel) {
         response.setContentType("application/octet-stream");
         String fileName = new String((dbvoModel.getDbConfigModel().getDbName() + ".zip").getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
         try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()))) {
             response.setHeader("Content-disposition", "attachment; filename=" + fileName);
             dbServer.tablesToZip(dbvoModel, zos);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("打包失败 {}", e.getMessage());
+            return this.process("创建失败");
         }
+        return this.process("创建成功");
     }
 
 }
