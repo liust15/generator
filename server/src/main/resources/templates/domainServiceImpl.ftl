@@ -2,7 +2,7 @@ package ${packageName}.service.data;
 
 import ${packageName}.domain.${tableModel.className};
 import ${packageName}.mapper.${tableModel.className}Mapper;
-import ${packageName}.service.data.${tableModel.className}Service;
+import ${packageName}.service.data.impl.${tableModel.className}Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
