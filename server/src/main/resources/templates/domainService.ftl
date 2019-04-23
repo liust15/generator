@@ -1,4 +1,4 @@
-package ${packageName}.service.data.impl;
+package ${packageName}.service.data;
 
 import ${packageName}.domain.${tableModel.className};
 
