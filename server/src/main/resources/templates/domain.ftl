@@ -14,10 +14,11 @@ public class ${tableModel.className} implements Serializable {
 
 <#list tableInfos as tableInfo>
 
-    private ${tableInfo.type} ${tableInfo.field};
     /**
     * ${tableInfo.comment}
     */
+    private ${tableInfo.type} ${tableInfo.field};
+
 </#list>
 
 }

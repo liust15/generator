@@ -10,7 +10,6 @@ import java.util.Map;
 /**
  *${tableModel.className} Server接口
  */
-@Mapper
 public interface ${tableModel.className}Service{
     /**
     * 单条插入
