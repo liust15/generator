@@ -15,7 +15,7 @@
     <!-- 通用查询结果列 -->
     <sql id="baseColumnList">
         <#list tableInfos as tableInfo>
-            `${tableInfo.field}`
+            `${tableInfo.field}`,
         </#list>
     </sql>
     
