@@ -38,11 +38,13 @@ import static com.liust.server.util.FileUtil.compress;
 @Service
 @Slf4j
 public class DBServerImpl implements DBServer {
-    @Autowired
-    private DBDao dbDao;
-    @Autowired
-    private Configuration configuration;
+    private final DBDao dbDao;
+    private final Configuration configuration;
 
+    public DBServerImpl(Configuration configuration, DBDao dbDao) {
+        this.configuration = configuration;
+        this.dbDao = dbDao;
+    }
 
     @Override
     public List<DBModel> getDBs(DBConfigModel dbConfigModel) {

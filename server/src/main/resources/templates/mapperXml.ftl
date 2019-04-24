@@ -15,7 +15,7 @@
     <!-- 通用查询结果列 -->
     <sql id="baseColumnList">
         <#list tableInfos as tableInfo>
-            `${tableInfo.field}`,
+            `${tableInfo.field}`<#if tableInfo_has_next>,</#if>
         </#list>
     </sql>
     
@@ -41,7 +41,7 @@
         <foreach collection="domains" item="domain" index="index" separator=",">
             (
             <#list tableInfos as tableInfo>
-                ${r'#{domain.'}${tableInfo.field}},
+                ${r'#{domain.'}${tableInfo.field}}<#if tableInfo_has_next>,</#if>
             </#list>
             )
         </foreach>

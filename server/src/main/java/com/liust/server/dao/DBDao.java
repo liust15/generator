@@ -1,13 +1,12 @@
 package com.liust.server.dao;
 
 import com.liust.server.config.DBConfig;
+import com.liust.server.config.IDBConfig;
 import com.liust.server.model.DBConfigModel;
 import com.liust.server.model.DBModel;
 import com.liust.server.model.TableInfo;
 import com.liust.server.model.TableModel;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,19 +21,13 @@ import lombok.extern.slf4j.Slf4j;
  **/
 @Slf4j
 @Repository
-public class DBDao {
-    @Autowired
-    private DBConfig dbConfig;
-    private JdbcTemplate jdbcTemplate;
-    private void init(DBConfigModel dbConfigModel){
-        this.jdbcTemplate = dbConfig.getJdbcTemplate(dbConfigModel);
-    }
+public class DBDao extends DBConfig {
 
     public List<DBModel> getDbModel(DBConfigModel dbConfigModel) {
-       this.init(dbConfigModel);
+        setJdbcTemplate(dbConfigModel);
         List<DBModel> list;
         try {
-            list = this.jdbcTemplate.query("SELECT distinct table_schema as dbName FROM information_schema.TABLES", (resultSet, i) -> {
+            list = jdbcTemplate.query(QUERY_TABLES, (resultSet, i) -> {
                 DBModel dbModel = new DBModel();
                 dbModel.setDbName(resultSet.getString("dbName"));
                 return dbModel;
@@ -48,10 +41,10 @@ public class DBDao {
 
 
     public List<TableModel> getTableModel(DBConfigModel dbConfigModel) {
-        this.init(dbConfigModel);
+        setJdbcTemplate(dbConfigModel);
         List<TableModel> list;
         try {
-            list = jdbcTemplate.query("SELECT * FROM information_schema.TABLES WHERE table_schema= ?", (resultSet, i) -> {
+            list = jdbcTemplate.query(QUERY_TABLE, (resultSet, i) -> {
                 TableModel tableModel = new TableModel();
                 tableModel.setTableComment(resultSet.getString("table_comment"));
                 tableModel.setTableName(resultSet.getString("table_name"));
@@ -65,10 +58,10 @@ public class DBDao {
     }
 
     public List<TableInfo> getTableInfo(DBConfigModel dbConfigModel, TableModel tableModel) {
-        this.init(dbConfigModel);
+        setJdbcTemplate(dbConfigModel);
         List<TableInfo> list;
         try {
-            list = jdbcTemplate.query("SELECT column_name,column_comment,data_type,column_key FROM information_schema.COLUMNS WHERE table_schema=? AND table_name=?", (resultSet, i) -> {
+            list = jdbcTemplate.query(QUERY_TABLE_INFO, (resultSet, i) -> {
                 TableInfo tableInfo = new TableInfo();
                 tableInfo.setField(resultSet.getString("column_name"));
                 tableInfo.setKey(resultSet.getString("column_key"));
